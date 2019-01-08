@@ -1,0 +1,4 @@
+nohup ./bin/Inception --defaults-file=./inc.cnf &
+
+./bin/mysql -uroot -h127.0.0.1 -P6669
+inception get variables;
