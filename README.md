@@ -58,6 +58,8 @@
 
 详细安装步骤请访问[www.yearning.io](http://yearning.io)获得帮助
 
+[安装步骤](安装步骤.md)
+
 [使用及安装文档](http://guide.yearning.io)
 
 ## Support 支持Yearning
@@ -66,11 +68,11 @@
 
 ![](img/alipay.jpg)
 ![](img/wechat.jpg)
-  
+
 ## About 联系方式
-   
+
    QQ群:103674679
-   
+
    E-mail: im@supermancookie.com
 
 ## Snapshot 效果展示
@@ -99,10 +101,10 @@
 ![](img/query.png)
 
 - 细粒度的权限分配
-![](img/PER.png)
+  ![](img/PER.png)
 
 - 我的工单
-![](img/myorder.png)
+  ![](img/myorder.png)
 
 
 ## License
