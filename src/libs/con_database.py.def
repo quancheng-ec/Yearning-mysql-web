@@ -5,21 +5,10 @@ About connection Database
 2017-11-23
 
 cookie
-
 '''
-"""
-Support for connecting via ssh service with public key or password
-
-pip install paramiko sshtunnel
-
-"""
 
 import pymysql
-import paramiko
-from sshtunnel import SSHTunnelForwarder
 
-
-mypkey = paramiko.RSAKey.from_private_key_file('/opt/.ssh/id_rsa')
 
 class SQLgo(object):
     def __init__(self, ip=None, user=None, password=None, db=None, port=None):
@@ -35,33 +24,15 @@ class SQLgo(object):
         theIndex.setdefault(word, []).append(value)
 
     def __enter__(self):
-        try:
-            sqlserver = SSHTunnelForwarder(
-               ssh_address_or_host=(self.ip,self.port),
-               ssh_username="root",ssh_pkey=mypkey,
-               remote_bind_address=('127.0.0.1', 3306)
-            )
-            sqlserver.start()
-            self.con = pymysql.connect(
-                host="127.0.0.1",
-                user=self.user,
-                passwd=self.password,
-                db=self.db,
-                charset='utf8mb4',
-                port=sqlserver.local_bind_port
-            )
-        except:
-            sqlserver.stop()
-            self.con = pymysql.connect(
+        self.con = pymysql.connect(
             host=self.ip,
             user=self.user,
             passwd=self.password,
             db=self.db,
             charset='utf8mb4',
             port=self.port
-        ) 
-        finally:
-            return self
+        )
+        return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.con.close()
