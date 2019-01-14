@@ -30,8 +30,7 @@ import pymysql
 sql='/*--user=root;--password=bbotte;--host=127.0.0.1;--port=3306;--enable-execute;*/\
 inception_magic_start;\
 use pro1;\
-insert into mytable1 (myname) values ("xianyu1");\
-insert into mytable1 (myname) values ("xianyu2");\
+insert into mytable1 (myname) values ("bbotte");\
 inception_magic_commit;'
 try:
     conn=pymysql.connect(host='127.0.0.1',user='inception',passwd='123456',db='',port=6669,use_unicode=True,charset="utf8")    #inception配置文件inc.cnf中的用户名和密码
