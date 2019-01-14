@@ -5,14 +5,7 @@ About connection Database
 2017-11-23
 
 cookie
-
 '''
-"""
-Support for connecting via ssh service with public key or password
-
-pip install paramiko sshtunnel
-
-"""
 
 import pymysql
 import paramiko
@@ -50,6 +43,17 @@ class SQLgo(object):
                 charset='utf8mb4',
                 port=sqlserver.local_bind_port
             )
+
+            '''
+            把通过ssh连接数据库的端口给inception,连接本地数据库密码写死的
+            ALTER TABLE `core_databaselist` ADD COLUMN `sshport` int(11) NULL AFTER `after`;
+            '''
+            insert_sshport=pymysql.connect(host='127.0.0.1',user='root',passwd='bbotte',db='yearning',charset='utf8mb4',port=3306,connect_timeout=1)
+            sshportcursor = insert_sshport.cursor()
+            sshportsql = "update yearning.core_databaselist set sshport={} WHERE ip='{}'".format(sqlserver.local_bind_port,self.ip)
+            sshportcursor.execute(sshportsql)
+            insert_sshport.commit()
+            insert_sshport.close()
         except:
             sqlserver.stop()
             self.con = pymysql.connect(

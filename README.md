@@ -58,6 +58,13 @@
 
 详细安装步骤请访问[www.yearning.io](http://yearning.io)获得帮助
 
+增加了ssh登录数据库，需要修改下面2个文件，需要有公钥可以登录远程服务器，详细见安装步骤文档
+
+```
+src/libs/call_inception.py
+src/libs/con_database.py
+```
+
 [安装步骤](安装步骤.md)
 
 [使用及安装文档](http://guide.yearning.io)
