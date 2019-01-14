@@ -1,4 +1,17 @@
+在数据库给inception设置授权
+
+grant all on *.* to 'inception'@"%" identified by "123456";
+flush privileges;
+
+设置后，配置inc.cnf,里面inception几项配置必须可以访问数据库
+inception_remote_backup_host=127.0.0.1 
+inception_remote_backup_port=3306 
+inception_remote_system_user=inception
+inception_remote_system_password=123456
+
+
 nohup ./bin/Inception --defaults-file=./inc.cnf &
 
 ./bin/mysql -uroot -h127.0.0.1 -P6669
 inception get variables;
+
