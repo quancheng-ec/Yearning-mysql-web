@@ -3,7 +3,7 @@
 
 '''
 数据库授权
-mysql -uroot -pqwert -hlocalhost
+mysql -uroot -pbbotte -hlocalhost
 grant all on *.* to 'inception'@"%" identified by "123456";
 flush privileges;
 
