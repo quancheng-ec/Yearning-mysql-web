@@ -68,6 +68,10 @@ class SQLgo(object):
             return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
+        try:
+            sqlserver.stop()
+        except:
+            pass
         self.con.close()
 
     def search(self, sql=None):
