@@ -11,7 +11,7 @@
 ![](https://img.shields.io/badge/python-3.6-brightgreen.svg)
 ![](https://img.shields.io/badge/Django-2.0.1-brightgreen.svg)
 
-##### 企业级MYSQL web端 SQL审核平台。支持ssh登录mysql数据库
+##### 企业级MYSQL web端 SQL审核平台。增加支持ssh登录mysql数据库
 
 ## Website 官网
 
