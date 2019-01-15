@@ -73,8 +73,7 @@ src/libs/con_database.py
 
 如果Yearning能够帮助到你，请支持下Yearning吧，让Yearning能够持续改善并更新
 
-![](img/alipay.jpg)
-![](img/wechat.jpg)
+[捐赠](https://github.com/cookieY/Yearning)
 
 ## About 联系方式
 
