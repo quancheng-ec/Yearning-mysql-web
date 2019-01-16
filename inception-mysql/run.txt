@@ -15,3 +15,6 @@ nohup ./bin/Inception --defaults-file=./inc.cnf &
 ./bin/mysql -uroot -h127.0.0.1 -P6669
 inception get variables;
 
+关于inc.cnf配置中inception_osc配置，打开的话需要安装percona toolkit工具
+https://www.percona.com/downloads/percona-toolkit/LATEST/
+yum localinstall percona-toolkit-3.0.10-1.el7.x86_64.rpm
