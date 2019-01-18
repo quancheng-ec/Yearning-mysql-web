@@ -135,6 +135,8 @@ def auth(username, password):
     un_init = init_conf()
     ldap = ast.literal_eval(un_init['ldap'])
     # 后台录入的验证用户信息，连接到ldap后通过查询登陆的用户名所在的OU，DN信息，然后进一步去ldap服务器进行账户和密码验证。
+    LDAP_ADMIN_USER = ldap['user']
+    LDAP_ADMIN_PASS = ldap['password']
 
     LDAP_SERVER = ldap['host']
     LDAP_DOMAIN = ldap['domain']
@@ -144,13 +146,13 @@ def auth(username, password):
     if LDAP_TYPE == '1':
         user = username + '@' + LDAP_DOMAIN
     elif LDAP_TYPE == '2':
-        user = "uid=%s,%s" % (username, LDAP_SCBASE)
+        user = "uid=%s,%s" % (LDAP_ADMIN_USER, LDAP_SCBASE)
     else:
-        user = "cn=%s,%s" % (username, LDAP_SCBASE)
+        user = "cn=%s,%s" % (LDAP_ADMIN_USER, LDAP_SCBASE)
     c = ldap3.Connection(
         ldap3.Server(LDAP_SERVER, get_info=ldap3.ALL),
         user=user,
-        password=password)
+        password=LDAP_ADMIN_PASS)
     ret = c.bind()
     if ret:
         if ldap['ou']:
