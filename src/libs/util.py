@@ -158,7 +158,7 @@ def auth(username, password):
         if ldap['ou']:
             res = c.search(
                 search_base=LDAP_SCBASE,
-                search_filter='(cn={})'.format(username),
+                search_filter='(|(cn={0})(email={0}))'.format(username),
                 search_scope=SUBTREE,
                 attributes=['cn', 'uid', 'mail'],
             )
@@ -176,7 +176,7 @@ def auth(username, password):
                         print((True, attr_dict["mail"], attr_dict["cn"], attr_dict["uid"]))
                         c.unbind()
                         conn2.unbind()
-                        return True
+                        return attr_dict
                     else:
                         print("auth fail")
                         return False
