@@ -22,7 +22,7 @@
       </div>
       <br>
       <Card>
-        <Tabs value="custom" style="max-height: 300px;">
+        <Tabs value="ldap" style="max-height: 300px;">
           <TabPane label="普通登陆" name="custom">
             <Form ref="formInline" :model="formInline" :rules="ruleInline" inline>
               <Form-item prop="user" style="width: 100%">
