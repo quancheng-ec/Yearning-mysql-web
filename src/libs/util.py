@@ -19,6 +19,7 @@ import ldap3
 from ldap3 import Connection, SUBTREE
 import configparser
 import ast
+import os
 
 _conf = configparser.ConfigParser()
 _conf.read('deploy.conf')
@@ -79,9 +80,15 @@ def conf_path() -> object:
     '''
     conf_set = namedtuple("name", ["db", "address", "port", "username", "password", "ipaddress"])
 
-    return conf_set(_conf.get('mysql', 'db'), _conf.get('mysql', 'address'),
-                    _conf.get('mysql', 'port'), _conf.get('mysql', 'username'),
-                    _conf.get('mysql', 'password'), _conf.get('host', 'ipaddress'))
+    # 1. try get from env
+    # 2. if not exist in env, try get from deploy.conf
+    return conf_set(
+        os.environ.get('YEARNING_MYSQL_DB', _conf.get('mysql', 'db')),
+        os.environ.get('YEARNING_MYSQL_ADDRESS', _conf.get('mysql', 'address')),
+        os.environ.get('YEARNING_MYSQL_PORT', _conf.get('mysql', 'port')),
+        os.environ.get('YEARNING_MYSQL_USERNAME', _conf.get('mysql', 'username')),
+        os.environ.get('YEARNING_MYSQL_PASSWORD', _conf.get('mysql', 'password')),
+        _conf.get('host', 'ipaddress'))
 
 
 def test_auth(username, password, host, type, sc, domain, ou):
@@ -158,7 +165,7 @@ def auth(username, password):
         if ldap['ou']:
             res = c.search(
                 search_base=LDAP_SCBASE,
-                search_filter='(|(cn={0})(email={0}))'.format(username),
+                search_filter='(|(cn={0})(mail={0}))'.format(username),
                 search_scope=SUBTREE,
                 attributes=['cn', 'uid', 'mail'],
             )
@@ -190,12 +197,13 @@ def auth(username, password):
 
 
 def init_conf():
+    CONF_DATA = conf_path()
     with con_database.SQLgo(
-            ip=_conf.get('mysql', 'address'),
-            user=_conf.get('mysql', 'username'),
-            password=_conf.get('mysql', 'password'),
-            db=_conf.get('mysql', 'db'),
-            port=_conf.get('mysql', 'port')) as f:
+            ip=CONF_DATA.address,
+            user=CONF_DATA.username,
+            password=CONF_DATA.password,
+            db=CONF_DATA.db,
+            port=CONF_DATA.port) as f:
         res = f.query_info("select * from core_globalpermissions where authorization = 'global'")
 
     return res[0]

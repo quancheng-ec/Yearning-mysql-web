@@ -8,11 +8,6 @@ cookie
 '''
 
 import pymysql
-import paramiko
-from sshtunnel import SSHTunnelForwarder
-
-
-mypkey = paramiko.RSAKey.from_private_key_file('/opt/.ssh/id_rsa')
 
 class SQLgo(object):
     def __init__(self, ip=None, user=None, password=None, db=None, port=None):
@@ -28,50 +23,15 @@ class SQLgo(object):
         theIndex.setdefault(word, []).append(value)
 
     def __enter__(self):
-        try:
-            sqlserver = SSHTunnelForwarder(
-               ssh_address_or_host=(self.ip,self.port),
-               ssh_username="root",ssh_pkey=mypkey,
-               remote_bind_address=('127.0.0.1', 3306)
-            )
-            sqlserver.start()
-            self.con = pymysql.connect(
-                host="127.0.0.1",
-                user=self.user,
-                passwd=self.password,
-                db=self.db,
-                charset='utf8mb4',
-                port=sqlserver.local_bind_port
-            )
+        self.con = pymysql.connect(
+            host=self.ip, user=self.user,
+            passwd=self.password, db=self.db,
+            charset='utf8mb4', port=self.port
+        )
 
-            '''
-            把通过ssh连接数据库的端口给inception,连接本地数据库密码写死的
-            ALTER TABLE `core_databaselist` ADD COLUMN `sshport` int(11) NULL AFTER `after`;
-            '''
-            insert_sshport=pymysql.connect(host='127.0.0.1',user='root',passwd='bbotte',db='yearning',charset='utf8mb4',port=3306,connect_timeout=1)
-            sshportcursor = insert_sshport.cursor()
-            sshportsql = "update yearning.core_databaselist set sshport={} WHERE ip='{}'".format(sqlserver.local_bind_port,self.ip)
-            sshportcursor.execute(sshportsql)
-            insert_sshport.commit()
-            insert_sshport.close()
-        except:
-            sqlserver.stop()
-            self.con = pymysql.connect(
-            host=self.ip,
-            user=self.user,
-            passwd=self.password,
-            db=self.db,
-            charset='utf8mb4',
-            port=self.port
-        ) 
-        finally:
-            return self
+        return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        try:
-            sqlserver.stop()
-        except:
-            pass
         self.con.close()
 
     def search(self, sql=None):

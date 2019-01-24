@@ -1,5 +1,6 @@
 import logging
 import json
+import os
 from libs import baseview, util
 from core.task import grained_permissions, set_auth_group
 from libs.serializers import UserINFO
@@ -212,6 +213,11 @@ class ldapauth(baseview.AnyLogin):
             jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
             valite = util.auth(username=username, password=password)
             if valite:
+                # re-organize user
+                username = valite['uid'][0]
+                real_name = valite['cn'][0]
+                email = valite['mail'][0]
+
                 user = Account.objects.filter(username=username).first()
                 if user is not None:
                     payload = jwt_payload_handler(user)
@@ -219,16 +225,16 @@ class ldapauth(baseview.AnyLogin):
                     return Response({'token': token, 'res': '', 'permissions': user.group})
                 else:
                     permissions = Account.objects.create_user(
-                        username=valite['cn'],
+                        username=username,
                         password=password+'not save',
                         is_staff=1,
-                        department='技术部',
-                        auth_group=',用户',
-                        realname=valite['cn'],
-                        email=valite['email'],
+                        department=os.environ.get('YEARNING_DEFAULT_DEPARTMENT', 'default'),
+                        auth_group=os.environ.get('YEARNING_DEFAULT_GROUP', ',basic'),
+                        real_name=real_name,
+                        email=email,
                         group='guest')
                     permissions.save()
-                    _user = authenticate(username=username, password=password)
+                    _user = authenticate(username=username, password=password+'not save')
                     token = jwt_encode_handler(jwt_payload_handler(_user))
                     return Response({'token': token, 'res': '', 'permissions': 'guest'})
             else:
