@@ -17,6 +17,11 @@
 
 [www.yearning.io](http://yearning.io)
 
+## Quancheng-ec Adaption
+1. 给 api 和 spa 分别作了两个 docker 文件可以 docker 化部署
+2. 调整了下用户创建模型，对 ldap 更友好一些
+3. 调整了配置从环境变更获取的逻辑
+
 
 ## Feature 功能
 
