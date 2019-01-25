@@ -21,6 +21,7 @@
 1. 给 api 和 spa 分别作了两个 docker 文件可以 docker 化部署
 2. 调整了下用户创建模型，对 ldap 更友好一些
 3. 调整了配置从环境变更获取的逻辑
+4. 调整了 spa 的 api base domain，去掉了:8000 这个，要做一层前端转发，如果本地测试可以调整下`webpage/src/lib/utils.js`里面的设置
 
 
 ## Feature 功能
