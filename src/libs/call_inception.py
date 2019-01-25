@@ -33,31 +33,22 @@ class Inception(object):
         return self
 
     def GenerateStatements(self, Sql: str = '', Type: str = '', backup=None):
-        '''
-        把通过ssh连接数据库的端口给inception,连接本地数据库密码写死的
-        ALTER TABLE `core_databaselist` ADD COLUMN `sshport` int(11) NULL AFTER `after`;
-        '''
-        get_sshport=pymysql.connect(host='127.0.0.1',user='root',passwd='bbotte',db='yearning',charset='utf8mb4',port=3306,connect_timeout=1)
-        sshportcursor = get_sshport.cursor()
-        sshportsql = "select sshport from yearning.core_databaselist WHERE ip='{}'".format(self.__dict__.get('host'))
-        sshportcursor.execute(sshportsql)
-        sshport = sshportcursor.fetchone()[0]
-        get_sshport.close()
-
         if Sql[-1] == ';':
             Sql = Sql.rstrip(';')
         elif Sql[-1] == '；':
             Sql = Sql.rstrip('；')
+
         if backup is not None and backup != 0:
             InceptionSQL = '''
-             /*--user=%s;--password=%s;--host=127.0.0.1;--port=%s;%s;%s;*/ \
+             /*--user=%s;--password=%s;--host=%s;--port=%s;%s;%s;*/ \
              inception_magic_start;\
              use `%s`;\
              %s; \
              inception_magic_commit;
             ''' % (self.__dict__.get('user'),
                    self.__dict__.get('password'),
-                   sshport,
+                   self.__dict__.get('host'),
+                   self.__dict__.get('port'),
                    Type,
                    backup,
                    self.__dict__.get('db'),
@@ -65,14 +56,15 @@ class Inception(object):
             return InceptionSQL
         else:
             InceptionSQL = '''
-                        /*--user=%s;--password=%s;--host=127.0.0.1;--port=%s;%s;*/ \
+                        /*--user=%s;--password=%s;--host=%s;--port=%s;%s;*/ \
                         inception_magic_start;\
                         use `%s`;\
                         %s; \
                         inception_magic_commit;
                        ''' % (self.__dict__.get('user'),
                               self.__dict__.get('password'),
-                              sshport,
+                              self.__dict__.get('host'),
+                              self.__dict__.get('port'),
                               Type,
                               self.__dict__.get('db'),
                               Sql)
